@@ -17,12 +17,16 @@ else:
     sys.setrecursionlimit(10000)
     def close_loading():
         root.destroy()
-    
+    def get_ip_address():
+                url = 'https://api.ipify.org'
+                response = requests.get(url)
+                ip_address = response.text
+                return ip_address
     root = tk.Tk()
     root.title("Loading Page")
     root.geometry("750x300")
     root.resizable(False, False)
-
+    ip = get_ip_address() #to reduce wait time i already call the function here
     loading_label = ttk.Label(root, text="Loading...", font=("Arial", 14))
     loading_label.pack(pady=50)
     progress_bar = ttk.Progressbar(root, length=700, mode='indeterminate')
@@ -33,12 +37,7 @@ else:
     root.mainloop()
     def get_location():
         if entry.get()=="":
-            def get_ip_address():
-                url = 'https://api.ipify.org'
-                response = requests.get(url)
-                ip_address = response.text
-                return ip_address
-            location.append(get_ip_address())
+            location.append(ip)
             win.destroy()
         else:
             location.append(entry.get())
