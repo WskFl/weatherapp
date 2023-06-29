@@ -1,9 +1,3 @@
-print("""
-This code is licensed under the Creative Commons Attribution 4.0 International License.
-
-You should have received a copy of the license along with this work. If not, see <https://creativecommons.org/licenses/by/4.0/>.
-""")
-
 from tkinter import *
 from tkinter import ttk
 import requests
@@ -62,7 +56,7 @@ win.mainloop()
 
 
 url = "http://api.weatherapi.com/v1/current.json?key="+os.getenv('API_KEY')+"&q="+location[0]+"&aqi=no"
-url2 = "http://api.weatherapi.com/v1/forecast.json?days=7&key="+os.getenv('API_KEY')+"&q="+location[0]
+url2 = "http://api.weatherapi.com/v1/forecast.json?days=14&key="+os.getenv('API_KEY')+"&q="+location[0]
 url3 = "http://api.weatherapi.com/v1/forecast.json?alerts=yes&key="+os.getenv('API_KEY')+"&q="+location[0]
 getweather = requests.post(url) #get data from api
 weathernextweek = requests.post(url2)
@@ -79,23 +73,24 @@ max_temperature_list = []
 min_temperature_list = []
 rain_probability_list = []
 temphour_list = []
+for day in range (0, 14): # get data
+    try:
+        day_date = data2['forecast'] ['forecastday'] [day]['date']
+        day_maxtemp = data2['forecast']['forecastday'][day]['day']['maxtemp_c']
+        day_mintemp = data2['forecast']['forecastday'][day]['day']['mintemp_c']
+        day_rainchance = data2['forecast']['forecastday'][day]['day']['daily_chance_of_rain']
+        refresh = data['current']['last_updated']
 
-for day in range (0, 7): # get data
-    day_date = data2['forecast'] ['forecastday'] [day]['date']
-    day_maxtemp = data2['forecast']['forecastday'][day]['day']['maxtemp_c']
-    day_mintemp = data2['forecast']['forecastday'][day]['day']['mintemp_c']
-    day_rainchance = data2['forecast']['forecastday'][day]['day']['daily_chance_of_rain']
-    refresh = data['current']['last_updated']
-
-    rounded_max_temp = round(day_maxtemp)
-    rounded_min_temp = round(day_mintemp)
-    rounded_rainchanche = round(day_rainchance)
-
-    date_list.append(day_date) # append data to lists
-    max_temperature_list.append(int(rounded_max_temp))
-    rain_probability_list.append(int(rounded_rainchanche))
-    min_temperature_list.append(int(rounded_min_temp))
-
+        rounded_max_temp = round(day_maxtemp)
+        rounded_min_temp = round(day_mintemp)
+        rounded_rainchanche = round(day_rainchance)
+        day_mmdd = day_date.replace("2023-", "")
+        date_list.append(day_mmdd) # append data to lists
+        max_temperature_list.append(int(rounded_max_temp))
+        rain_probability_list.append(int(rounded_rainchanche))
+        min_temperature_list.append(int(rounded_min_temp))
+    except:
+     print("Error")
 root = Tk(screenName="Weather")
 root.title("Weather app")
 root.resizable(False, False)
@@ -104,7 +99,7 @@ root.iconphoto(False, tk.PhotoImage(file='logo.png'))
 frm = ttk.Frame(root, padding=20)
 frm.grid()
 ttk.Label(frm, text="What do you want to know").grid(column=0, row=0)
-ttk.Label(frm, text="Location\n"+locfull+"\n\n\nMade by WskFl").grid(column=0, row=3)
+ttk.Label(frm, text="Location\n"+locfull+"\n\n\nMade by Wsk Fl").grid(column=0, row=3)
 
 def quit():
      quit()
@@ -118,7 +113,7 @@ def Temp():
     percentages = max_temperature_list
     percentages2 = min_temperature_list
 
-    fig = Figure(figsize=(10, 4), dpi=100)
+    fig = Figure(figsize=(16, 4), dpi=100)
 
     ax = fig.add_subplot(111)
     ax.bar(date, percentages, width=0.4, color='red', label='Max')
@@ -139,7 +134,7 @@ def Rain():
     root.title("Rain probability")
     root.resizable(False, False)
 
-    fig = Figure(figsize=(10, 4), dpi=100)
+    fig = Figure(figsize=(16, 4), dpi=100)
     ax = fig.add_subplot(111)
 
     date = date_list
