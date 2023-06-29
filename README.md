@@ -15,9 +15,7 @@ pip install -r requirments.txt
 
 5. Paste your api key between the two "" at the API_KEY field
 
-6. Set Standard Location in .env file, this can be a country a city and similar
-
-7. Run the script
+6. Run the script
 ```
 python Weatherapp.py
 ```
