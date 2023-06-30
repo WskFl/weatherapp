@@ -14,7 +14,18 @@ load_dotenv()
 
 test_key = requests.get("http://api.weatherapi.com/v1/forecast.json?alerts=yes&key="+os.getenv("API_KEY")+"&q=Germany")
 if test_key.status_code == 403:
-    os.environ["API_KEY"] = simpledialog.askstring(title="Api Key", prompt="No api key found or invalid, enter your key here")
+    os.environ["API_KEY"] = test2 =  simpledialog.askstring(title="Api Key", prompt="No api key found or invalid, enter your key here")
+    test_key = requests.get("http://api.weatherapi.com/v1/forecast.json?alerts=yes&key="+test2+"&q=Germany")
+    if test_key.status_code == 403:
+        os.environ["API_KEY"] = test2 =  simpledialog.askstring(title="Api Key", prompt="No api key found or invalid, enter your key here")
+        test_key = requests.get("http://api.weatherapi.com/v1/forecast.json?alerts=yes&key="+test2+"&q=Germany")
+        if test_key.status_code == 403:
+            os.environ["API_KEY"] = test2 =  simpledialog.askstring(title="Api Key", prompt="No api key found or invalid, enter your key here")
+            test_key = requests.get("http://api.weatherapi.com/v1/forecast.json?alerts=yes&key="+test2+"&q=Germany")
+            if test_key.status_code == 403:
+                os.environ["API_KEY"] = test2 =  simpledialog.askstring(title="Api Key", prompt="No api key found or invalid, enter your key here")
+                test_key = requests.get("http://api.weatherapi.com/v1/forecast.json?alerts=yes&key="+test2+"&q=Germany") #dont ask
+            
 
 sys.setrecursionlimit(10000)
 def close_loading():
@@ -37,10 +48,11 @@ root.after(500, close_loading)
 progress_bar.start(3)
 root.mainloop()
 
-ip = get_ip_address() #to reduce wait time i already call the function here
-print(ip)
+
 def get_location():
     if entry.get() == "":
+        ip = get_ip_address()
+        print(ip)
         location.append(ip)
         win.destroy()
     else:
@@ -69,6 +81,7 @@ win.mainloop()
 url = "http://api.weatherapi.com/v1/current.json?key="+os.getenv('API_KEY')+"&q="+location[0]+"&aqi=no"
 url2 = "http://api.weatherapi.com/v1/forecast.json?days=14&key="+os.getenv('API_KEY')+"&q="+location[0]
 url3 = "http://api.weatherapi.com/v1/forecast.json?alerts=yes&key="+os.getenv('API_KEY')+"&q="+location[0]
+print(url+"\n"+url2+"\n"+url3)
 getweather = requests.post(url) #get data from api
 weathernextweek = requests.post(url2)
 alertslist = requests.post(url3)
@@ -92,14 +105,11 @@ for day in range (0, 14): # get data
         day_rainchance = data2['forecast']['forecastday'][day]['day']['daily_chance_of_rain']
         refresh = data['current']['last_updated']
 
-        rounded_max_temp = round(day_maxtemp)
-        rounded_min_temp = round(day_mintemp)
-        rounded_rainchanche = round(day_rainchance)
         day_mmdd = day_date.replace("2023-", "")
         date_list.append(day_mmdd) # append data to lists
-        max_temperature_list.append(int(rounded_max_temp))
-        rain_probability_list.append(int(rounded_rainchanche))
-        min_temperature_list.append(int(rounded_min_temp))
+        max_temperature_list.append(int(day_maxtemp))
+        rain_probability_list.append(int(day_rainchance))
+        min_temperature_list.append(int(day_mintemp))
     except:
         print("Error")
 root = Tk(screenName="Weather")
@@ -109,10 +119,12 @@ root.iconphoto(False, tk.PhotoImage(file='logo.png'))
 
 frm = ttk.Frame(root, padding=20)
 frm.grid()
+
 ttk.Label(frm, text="What do you want to know").grid(column=0, row=0)
 ttk.Label(frm, text="Location\n"+locfull+"\n\n\nMade by Wsk Fl").grid(column=0, row=3)
 
 def quit():
+    print("S\ne\ne\n\ny\no\nu\n\nn\ne\nx\nt\n\nt\ni\nm\ne")
     quit()
 
 def Temp():
@@ -186,7 +198,7 @@ def TempHour():
     except ValueError:
         pass
         print("no Input")
-    dayindex = date_list.index(day)
+        dayindex = date_list.index(0)
     print(day+"\n"+str(dayindex))
     
     try:
